@@ -87,7 +87,7 @@ resource "null_resource" "wait_for_bootstrap_to_finish" {
   provisioner "local-exec" {
     command = <<-EOF
     while true; do
-      if ssh -q -i ${var.private-key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${aws_instance.my-instance1.public_ip} [[ -f /home/ubuntu/done ]]; then
+      if ssh -q -i ${var.private_key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${aws_instance.my-instance1.public_ip} [[ -f /home/ubuntu/done ]]; then
         echo "Bootstrap completed in the Master"
         break
       else
@@ -99,7 +99,7 @@ resource "null_resource" "wait_for_bootstrap_to_finish" {
     
     %{for worker_public_ip in aws_instance.my-instance2[*].public_ip~}
       while true; do
-      if ssh -q -i ${var.private-key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${worker_public_ip} [[ -f /home/ubuntu/done ]]; then
+      if ssh -q -i ${var.private_key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${worker_public_ip} [[ -f /home/ubuntu/done ]]; then
         echo "Bootstrap completed in the Minion: ${worker_public_ip}"
         break
       else
@@ -110,7 +110,7 @@ resource "null_resource" "wait_for_bootstrap_to_finish" {
       done
     %{endfor~}
 
-    ssh -q -i ${var.private-key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${aws_instance.my-instance1.public_ip} sudo salt-key -A -y
+    ssh -q -i ${var.private_key} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ubuntu@${aws_instance.my-instance1.public_ip} sudo salt-key -A -y
     EOF
   }
   triggers = {

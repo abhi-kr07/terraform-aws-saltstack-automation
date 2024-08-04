@@ -1,4 +1,4 @@
-variable "private-key" {
+variable "private_key" {
   type = string
   description = "This is private key"
   default = "./keys/aws_key"
